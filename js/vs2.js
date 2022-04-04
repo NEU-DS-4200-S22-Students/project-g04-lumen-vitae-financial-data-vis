@@ -10,7 +10,7 @@ function counter(arr) {
       count[element] = 1;
     }
   }
-  console.log(count)
+  // console.log(count)
   var other = 0
   for (const element of Object.keys(count)) {
     if (count[element] < 10) {
