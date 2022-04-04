@@ -10,6 +10,16 @@ function counter(arr) {
       count[element] = 1;
     }
   }
+  console.log(count)
+  var other = 0
+  for (const element of Object.keys(count)) {
+    if (count[element] < 10) {
+      other = other + count[element]
+      delete count[element]
+    }
+  }
+
+  count["other"] = other
 
   // clean data to d3 likes
   result = []
@@ -17,24 +27,29 @@ function counter(arr) {
     result.push({ "count": element })
   }
 
-  return result
+  return [result, Object.keys(count)]
 }
 
 // 3 ring dount chart 
 function multiDountChart(data) {
-
+  // console.log(data)
   // clean and get the data d3 want for each ring
   const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
   DnCounter = counter(arrayColumn(data, "numberOfChildrenSponsored"))
-  console.log(DnCounter)
+  // console.log(DnCounter)
+
   SorCounter = counter(arrayColumn(data, "state"))
-  console.log(SorCounter)
+  // console.log(SorCounter)
+
   PtCounter = counter(arrayColumn(data, "paymentType"))
-  console.log(PtCounter)
+  // console.log(PtCounter)
+
 
   // get clean data
-  cleanedData = [DnCounter, SorCounter, PtCounter]
+  cleanedData = [DnCounter[0], SorCounter[0], PtCounter[0]]
+  // labels 
+  labels = [DnCounter[1], SorCounter[1], PtCounter[1]]
   // set up colors for each ring
   colors = [d3.scaleOrdinal(d3.schemeCategory10), d3.scaleOrdinal(d3.schemeDark2), d3.scaleOrdinal(d3.schemeTableau10)]
 
@@ -46,7 +61,7 @@ function multiDountChart(data) {
   var svg = d3.select('#vis-svg-1')
     .attr('width', width)
     .attr('height', height);
-  
+
   // start a pie function to get the data
   var pie = d3.pie()
     .value(function (d) { return d.count; })
@@ -84,25 +99,23 @@ function multiDountChart(data) {
         return color1(i);
       });
 
-    // // genereate label
-    // svg1.append("g")
-    //   .attr("font-family", "sans-serif")
-    //   .attr("font-size", 10)
-    //   .attr("text-anchor", "middle")
-    //   .selectAll("text")
-    //   .data(arc1)
-    //   .join("text")
-    //   .attr("transform", d => `translate(${arcLabel.centroid(d)})`)
-    //   .selectAll("tspan")
-    //   .data(d => {
-    //     const lines = `${title(d.data)}`.split(/\n/);
-    //     return (d.endAngle - d.startAngle) > 0.25 ? lines : lines.slice(0, 1);
-    //   })
-    //   .join("tspan")
-    //   .attr("x", 0)
-    //   .attr("y", (_, i) => `${i * 1.1}em`)
-    //   .attr("font-weight", (_, i) => i ? null : "bold")
-    //   .text(d => d);
+
+    // genereate label
+    svg1.append("g")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 20)
+      .attr("text-anchor", "middle")
+      .selectAll("text")
+      .data(pie(cleanedData[i]))
+      .join("text")
+      .attr("transform", d => `translate(${arcLabel.centroid(d)})`)
+      .selectAll("tspan")
+      .data(d => `${labels[i][d.index]}`.split(/\n/))
+      .join("tspan")
+      .attr("x", 0)
+      .attr("y", (_, i) => `${i * 1.1}em`)
+      .attr("font-weight", (_, i) => i ? null : "bold")
+      .text(d => d);
   }
 
 }
