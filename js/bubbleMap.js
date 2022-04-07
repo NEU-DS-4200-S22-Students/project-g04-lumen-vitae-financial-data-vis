@@ -5,6 +5,7 @@ function bubbleMap() {
       const [x, y] = projection([+coords.lon, +coords.lat])
       return `translate(${x},${y})`
     }
+    brushEnd = false
     
   function chart(selector, data) {
     const extent = d3.extent(data.map(d => +d.amount))
@@ -34,47 +35,85 @@ function bubbleMap() {
           .style("stroke", "black")
           .style("opacity", .3)
       
-      const Tooltip = d3.select('vis-hold')
-        .append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 1)
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "2px")
-        .style("border-radius", "5px")
-        .style("padding", "5px")
+      // const Tooltip = d3.select(selector)
+      //   .append("div")
+      //   .attr("class", "tooltip")
+      //   .style("opacity", 1)
+      //   .style("background-color", "white")
+      //   .style("border", "solid")
+      //   .style("border-width", "2px")
+      //   .style("border-radius", "5px")
+      //   .style("padding", "5px")
 
-      // Three function that change the tooltip when user hover / move / leave a cell
-      const mouseover = function(event, d) {
-        Tooltip.style("opacity", 1)
-      }
-      var mousemove = function(event, d) {
-        console.log(d)
-        Tooltip
-          .html(d.stateName + "<br>" + "long: " + d.lon + "<br>" + "lat: " + d.lat)
-          .style("left", (event.x)/2 + "px")
-          .style("top", (event.y)/2 - 30 + "px")
-      }
-      var mouseleave = function(event, d) {
-        Tooltip.style("opacity", 0)
-      }
+      // // Three function that change the tooltip when user hover / move / leave a cell
+      // const mouseover = function(event, d) {
+      //   Tooltip.style("opacity", 1)
+      // }
+      // var mousemove = function(event, d) {
+      //   console.log(d)
+      //   Tooltip
+      //     .html(d.stateName + "<br>" + "long: " + d.lon + "<br>" + "lat: " + d.lat)
+      //     .style("left", (event.x)/2 + "px")
+      //     .style("top", (event.y)/2 - 30 + "px")
+      // }
+      // var mouseleave = function(event, d) {
+      //   Tooltip.style("opacity", 0)
+      // }
       
       // Set the color group
       const colorGroup =  d3.scaleOrdinal(d3.schemeDark2)
       // Add circles
-      svg.selectAll('myCircles')
+      let circles = svg.selectAll('myCircles')
       .data(data)
       .join("circle")
         .attr("cx", d => projection([d.lon, d.lat])[0])
         .attr("cy", d => projection([d.lon, d.lat])[1])
         .attr("r", d=> radius(d.amount))
+        .attr("class", "circle")
         .style("fill", (i) => colorGroup(i))
         .attr("stroke", "#69Wb3a2")
         .attr("stroke-width", 3)
         .attr("fill-opacity", .5)
-      .on("mouseover", mouseover)
-      .on("mousemove", mousemove)
-      .on("mouseleave", mouseleave)
+      // .on("mouseover", mouseover)
+      // .on("mousemove", mousemove)
+      // .on("mouseleave", mouseleave)
+
+      ///////////////////////////////////////////////////////////
+      // Add the brushing functionality in the linechart
+      const brush = d3.brush()
+        .on("start brush", brushed)
+        .on("end",endBrushed);
+
+      svg.call(brush)
+
+      function brushed({selection}) {
+        if (!brushEnd){
+          if (selection) {
+            // selection isn't null, so let's figure out the extent
+            const [[x0, y0], [x1, y1]] = selection;
+            // Change the points style by setting the enclosed points' class to "selected"
+            circles.classed('selected', d => x0 <= projection([d.lon, d.lat])[0] && projection([d.lon, d.lat])[0] <= x1 && y0 <= projection([d.lon, d.lat])[1] && projection([d.lon, d.lat])[1] <= y1)
+          } else {
+            // When click the area out of the rectangle, all the points would be not selected
+            circles.classed('selected', false)
+          }
+
+          // Calling the dispatch 'linkFromLineChart' function with the arguments of selected data 
+          // after classing the selected points during the brushing.
+          // selectionDispatcher.call('linkFromLineChart', this, svg.selectAll('.selected').data())
+        }
+      }
+
+    // Pretty tricky functinon.
+    // Change the brushEnd field to avoid endless loop.
+    function endBrushed() {
+      if(!brushEnd){
+        brushEnd = true
+        d3.select(this).call(brush.clear)
+        brushEnd = false
+      }
+    }
+    ///////////////////////////////////////////////////////////
     })
   
     // Add the legend
