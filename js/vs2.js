@@ -58,7 +58,7 @@ function multiDountChart(data) {
   var height = 1000;
   var donutWidth = 75;
   var radius1 = Math.min(width, height) / 2;
-  var svg = d3.select('#vis-svg-1')
+  var svg = d3.select('#circularRing')
     .attr('width', width)
     .attr('height', height);
 

@@ -76,22 +76,15 @@
   </div>
 
   <!-- Visualization goes here -->
-  <!-- <div class='vis-holder'> -->
-  <!-- Change viewbox to whatever you want, e.g., '0 0 1000 6000' This determines your aspect ratio and coordinate system -->
-  <!-- Delete all the sample SVG code below after the viewbox to before the closing tag. Populate this part of the SVG with D3. -->
-  <!-- <svg id='vis-svg-1' preserveAspectRatio='xMidYMid meet' class='vis-svg' viewBox='0 0 1000 1000' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'> -->
-
-
-
-
-
-  <!-- Don't delete the closing tag! -->
-  <!-- </svg> -->
-  <!-- </div> -->
-  <div class='vis-holder'>
-    <svg id='vis-svg-1' preserveAspectRatio='xMidYMid meet' class='vis-svg' viewBox='0 0 1000 1000' version='1.1'
-      xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-      <div id="donut-charts"></div>
+  <div id= 'vis-holder' class='vis-holder'>
+    <!-- Change viewbox to whatever you want, e.g., '0 0 1000 6000' This determines your aspect ratio and coordinate system -->
+    <!-- Delete all the sample SVG code below after the viewbox to before the closing tag. Populate this part of the SVG with D3. -->
+    <svg id='bubbleMap' preserveAspectRatio='xMidYMid meet' class='vis-svg' viewBox='0 0 1000 1000' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+      <text x='50%' y='-5%' text-anchor='middle'>Bubble Map Visualization</text>
+      <!-- Don't delete the closing tag! -->
+    </svg >
+    <svg id='circularRing' preserveAspectRatio='xMidYMid meet' class='vis-svg' viewBox='0 0 1000 1000' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+      <text x='50%' y='-5%' text-anchor='middle'>CircularRing Visualization</text>
     </svg>
   </div>
   <!-- Further writeup -->
@@ -133,9 +126,9 @@
 
   <!-- Scripts at the end avoid need for dealing with async, defer, or onload event handlers -->
   <script src='lib/d3.v7.3.0/d3.js'></script>
-  <script src='js/visualization.js'></script>
+  <script src='js/bubbleMap.js'></script>
   <script src='js/vs2.js'></script>
-
+  <script src='js/visualization.js'></script>
 </body>
 
 </html>

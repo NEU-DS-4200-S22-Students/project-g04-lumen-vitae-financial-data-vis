@@ -2,6 +2,10 @@
 // variables and prevent 
 ((() => {
 
-  console.log('Hello, world!');
+  d3.csv('data/GeographicalTotalDonation.csv').then(data => {
+
+    let geoDonationBubbleMap = bubbleMap()
+      ('#bubbleMap', data)
+  });
 
 })());
