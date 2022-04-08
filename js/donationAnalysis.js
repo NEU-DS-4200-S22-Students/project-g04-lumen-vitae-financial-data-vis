@@ -1,113 +1,102 @@
-// function donationAnalysis() {
-//     // set the dimensions and margins of the graph
-//     // set the dimensions and margins of the graph
-//     const width = 600,
-//     height = 600,
-//     margin = 40;
-//     let totalDonation = 0;
-//     let svg;
-//     let defaultDataSet;
+function donationAnalysis() {
+    // set the dimensions and margins of the graph
+    const width = 800,
+    height = 800,
+    margin = 40;
+    let totalDonation = 0;
+    let svg;
+    let defaultDataSet;
+    let maxDataLength;
     
-//     function chart(selector, data, selectionDispatcher){
+    function chart(selector, data, selectionDispatcher){
+        maxDataLength = data.length;
+        // calculate the sum of the donation.
+        for(let i = 0; i < data.length; i++){
+          totalDonation = totalDonation + (+data[i].amount);         
+        }
 
-//         // calculate the sum of the donation.
-//         for(let i = 0; i < data.length; i++){
-//           totalDonation = totalDonation + (+data[i].amount);         
-//         }
+        // sort data
+        data.sort(function(b, a) {
+            return a.amount - b.amount;
+        });
 
-//         // sort data
-//         data.sort(function(b, a) {
-//             return a.amount - b.amount;
-//         });
-
-//         // Simplfy the dataset. If length of dataset is larger than 3, only gain the largest 
-//         // three state donation amount and use {other, amount} to replace other information.
-//         let newData = [];
-//         if (data.length <= 3) {
-//             newData = data
-//         } else {
-//         let other =0;
-//         for(let i = 0; i < data.length; i++){
-//             if(i < 3){
-//             newData.push({stateName: data[i].stateName, amount:+data[i].amount});
-//             } else {
-//             other = other + (+data[i].amount);
-//             }
-//         }
-//         newData.push({stateName: 'other', amount:other});
-//         }
-//         defaultDataSet = newData;
-//         console.log(newData);
+        // Simplfy the dataset. If length of dataset is larger than 3, only gain the largest 
+        // three state donation amount and use {other, amount} to replace other information.
+        let newData = [];
+        if (data.length <= 3) {
+            newData = data
+        } else {
+        let other =0;
+        for(let i = 0; i < data.length; i++){
+            if(i < 3){
+            newData.push({stateName: data[i].stateName, amount:+data[i].amount});
+            } else {
+            other = other + (+data[i].amount);
+            }
+        }
+        newData.push({stateName: 'other', amount:other});
+        }
+        defaultDataSet = newData;
+        console.log(newData);
         
 
-//         // append the svg object
-//         svg = d3.select(selector)
-//         .append("svg")
-//             .attr("width", width)
-//             .attr("height", height)
-//         .append("g")
-//             .attr("transform", `translate(${width / 2}, ${height / 2})`);
+        // append the svg object
+        svg = d3.select(selector)
+        .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+        .append("g")
+            .attr("transform", `translate(${width / 2}, ${height / 2})`);
         
-//         updatePieChart(svg, newData)
+        updateDonationAnalysis(svg, newData)
         
-//         return chart;
-//     }
+        return chart;
+    }
 
-//     function updatePieChart(svg, newData) {
-//         svg.selectAll('path').remove()
-//         svg.selectAll('text').remove()
-//         const color = d3.scaleOrdinal()
-//         .range(d3.schemeSet2);
+    function updateDonationAnalysis(svg, newData) {
+        svg.selectAll('text').remove()
+
+        svg.append('text')
+            .attr('y',-330)
+            .style('stroke', 'black')
+            .text('Geographical Donation List')
+            .style("text-anchor", "middle")
+            .style('font-size', '50px');
+
+        svg.append('text')
+            .attr('y',-270)
+            .style('stroke', 'black')
+            .text('Total Donation Amounts: ' + totalDonation)
+            .style("text-anchor", "middle")
+            .style('font-size', '30px');
         
-//         const pie = d3.pie()
-//         .value(function(d) {return d.amount})
-
-//         const data_ready = pie(newData)
-
-//         // shape helper to build arcs:
-//         const arcGenerator = d3.arc()
-//         .innerRadius(0)
-//         .outerRadius(radius)
-
-//         svg
-//         .selectAll('mySlices')
-//         .data(data_ready)
-//         .join('path')
-//             .attr('d', arcGenerator)
-//             .attr('fill', function(d){ return(color(d.data.stateName)) })
-//             .attr("stroke", "black")
-//             .style("stroke-width", "2px")
-//             .style("opacity", 0.7)
-
-//         svg
-//         .selectAll('mySlices')
-//         .data(data_ready)
-//         .join('text')
-//         // .text(function(d){ return d.data.stateName +':  '+ Math.round(((d.data.amount/totalDonation)*100)) + "%"})
-//         .text(function(d){ return d.data.stateName +':  '+ (Number.parseFloat(d.data.amount/totalDonation*100)).toFixed(2) + "%"})
-//         .attr("transform", function(d) { return `translate(${arcGenerator.centroid(d)})`})
-//         .style("text-anchor", "middle")
-//         .style("font-size", 17)
-//     }
+        for(let i = 0; i < newData.length; i++){
+          svg.append('text')
+            .attr('y', -240 + 25 * (i+1))
+            .style('stroke', 'blue')
+            .text(newData[i].stateName + ":  " + newData[i].amount)
+            .style("text-anchor", "middle")
+            .style('font-size', '25px');     
+        }
+    }
     
-//     chart.updateSelection = function (selectedData) {
-//         console.log(selectedData)
-//         let unselectedStateDonation = totalDonation
-//         let updatedData = [];
-//         if (selectedData.length == 0){
-//             updatePieChart(svg, defaultDataSet)
-//         } else {
-//             for(let i = 0; i < selectedData.length; i++){  
-//                 updatedData.push({stateName: selectedData[i].stateName, amount:+selectedData[i].amount});
-//                 unselectedStateDonation = unselectedStateDonation - (+selectedData[i].amount);
-//             }
-//             if (unselectedStateDonation !== 0) {
-//                 updatedData.push({stateName: 'other', amount:+unselectedStateDonation})
-//             }
-//             updatePieChart(svg, updatedData)
-//         }
+    chart.updateSelection = function (selectedData) {
+        let unselectedStateDonation = totalDonation
+        let updatedData = [];
+        if (selectedData.length == 0){
+            updateDonationAnalysis(svg, defaultDataSet)
+        } else {
+            for(let i = 0; i < selectedData.length; i++){  
+                updatedData.push({stateName: selectedData[i].stateName, amount:+selectedData[i].amount});
+                unselectedStateDonation = unselectedStateDonation - (+selectedData[i].amount);
+            }
+            if (selectedData.length !== maxDataLength) {
+                updatedData.push({stateName: 'other', amount:+unselectedStateDonation})
+            }
+            updateDonationAnalysis(svg, updatedData)
+        }
 
-//     }
-//     return chart;
-// }
+    }
+    return chart;
+}
   

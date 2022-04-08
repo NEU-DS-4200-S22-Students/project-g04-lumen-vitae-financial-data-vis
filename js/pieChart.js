@@ -1,17 +1,17 @@
 function pieChart() {
     // set the dimensions and margins of the graph
-    // set the dimensions and margins of the graph
-    const width = 600,
-    height = 600,
+    const width = 800,
+    height = 800,
     margin = 40;
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     const radius = Math.min(width, height) / 2 - margin
     let totalDonation = 0;
     let svg;
     let defaultDataSet;
+    let maxDataLength;
     
     function chart(selector, data, selectionDispatcher){
-
+        maxDataLength = data.length;
         // calculate the sum of the donation.
         for(let i = 0; i < data.length; i++){
           totalDonation = totalDonation + (+data[i].amount);         
@@ -104,7 +104,7 @@ function pieChart() {
                 updatedData.push({stateName: selectedData[i].stateName, amount:+selectedData[i].amount});
                 unselectedStateDonation = unselectedStateDonation - (+selectedData[i].amount);
             }
-            if (unselectedStateDonation !== 0) {
+            if (selectedData.length !== maxDataLength) {
                 updatedData.push({stateName: 'other', amount:+unselectedStateDonation})
             }
             updatePieChart(svg, updatedData)
