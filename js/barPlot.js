@@ -6,7 +6,7 @@ function barPlot() {
   let allBars;
 
   function chart(selector, data, selectionDispatcher){
-    // append the svg object to the body of the page
+    // append the svg object
     const svg = d3.select(selector)
       .append("svg")
         .attr("width", width + margin.left + margin.right)
