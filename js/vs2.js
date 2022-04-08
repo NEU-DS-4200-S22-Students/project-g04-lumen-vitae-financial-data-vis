@@ -23,8 +23,8 @@ function counter(arr) {
 
   // clean data to d3 likes
   result = []
-  for (const element of Object.values(count)) {
-    result.push({ "count": element })
+  for (const element of Object.entries(count)) {
+    result.push({ "count": element[1], "label": element[0] })
   }
 
   return [result, Object.keys(count)]
@@ -47,9 +47,9 @@ function multiDountChart(data) {
 
 
   // get clean data
-  cleanedData = [DnCounter[0], SorCounter[0], PtCounter[0]]
+  cleanedData = [PtCounter[0], SorCounter[0], DnCounter[0]]
   // labels 
-  labels = [DnCounter[1], SorCounter[1], PtCounter[1]]
+  labels = [PtCounter[1], SorCounter[1], DnCounter[1]]
   // set up colors for each ring
   colors = [d3.scaleOrdinal(d3.schemeCategory10), d3.scaleOrdinal(d3.schemeDark2), d3.scaleOrdinal(d3.schemeTableau10)]
 
@@ -66,7 +66,7 @@ function multiDountChart(data) {
   // start a pie function to get the data
   var pie = d3.pie()
     .value(function (d) { return d.count; })
-    .sort(null);
+    .sort(null).padAngle(.005);
 
   // recursion will generate 3 ring
   for (let i = 0; i < 3; i++) {
@@ -86,7 +86,7 @@ function multiDountChart(data) {
 
     labelRadius = (radius1 + radius1 - donutWidth) / 2
 
-    radius1 = radius1 - donutWidth
+    radius1 = radius1 - donutWidth - 20
 
     const arcLabel = d3.arc().innerRadius(labelRadius).outerRadius(labelRadius);
 
@@ -98,6 +98,12 @@ function multiDountChart(data) {
       .attr('d', arc1)
       .attr('fill', function (d, i) {
         return color1(i);
+      })
+      .on("click", function (d, i, j) {
+        // console.log(i)
+
+        svg.selectAll('.label').text(i["data"]["label"])
+        svg.selectAll('.value').text(i["data"]["count"])
       });
 
 
@@ -111,13 +117,38 @@ function multiDountChart(data) {
       .join("text")
       .attr("transform", d => `translate(${arcLabel.centroid(d)})`)
       .selectAll("tspan")
-      .data(d => `${labels[i][d.index]}`.split(/\n/))
+      .data(d => {
+        label = labels[i][d.index]
+        
+        if (label.length > 5) {
+          label = label.substring(0,5) + "..."
+        }
+        console.log(label)
+        return `${label}`.split(/\n/)
+      })
       .join("tspan")
       .attr("x", 0)
       .attr("y", (_, i) => `${i * 1.1}em`)
       .attr("font-weight", (_, i) => i ? null : "bold")
       .text(d => d);
   }
+
+  svg1.append("svg:circle")
+    .attr("r", radius1 * 0.8)
+    .style("fill", "#E7E7E7")
+
+  svg1.append('text')
+    .attr('class', 'center-txt type')
+    .attr('y', radius1 * -0.4)
+    .attr('text-anchor', 'middle')
+    .style('font-weight', 'bold')
+    .text("Details");
+  svg1.append('text')
+    .attr('class', 'center-txt label')
+    .attr('text-anchor', 'middle');
+  svg1.append('text')
+    .attr('class', 'center-txt value')
+    .attr('y', radius1 * 0.4).attr('text-anchor', 'middle');
 
 }
 
