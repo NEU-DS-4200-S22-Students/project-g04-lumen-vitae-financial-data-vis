@@ -31,9 +31,20 @@ h1, h2, h3 {
 	stroke-width: 4px;
 }
 
-circle.selected {
-	fill: pink;
+.bars:hover{
 	stroke: red;
+	stroke-width: 4px;
+}
+
+.circle.selected {
+	stroke: red;
+	stroke-width: 4px;
+	opacity: .5;
+}
+
+.bars.selected {
+	stroke: red;
+	stroke-width: 4px;
 	opacity: .5;
 }
 
