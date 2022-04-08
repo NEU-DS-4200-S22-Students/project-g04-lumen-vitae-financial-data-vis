@@ -1,17 +1,19 @@
 function bubbleMap() {
-    const width = 1000
-    const height = 1000
-    const translate = (coords) => {
-      const [x, y] = projection([+coords.lon, +coords.lat])
-      return `translate(${x},${y})`
-    }
-    brushEnd = false
+  const width = 1000
+  const height = 1000
+  const translate = (coords) => {
+    const [x, y] = projection([+coords.lon, +coords.lat])
+    return `translate(${x},${y})`
+  }
+  brushEnd = false
+  let allBubbles;
     
-  function chart(selector, data) {
+  function chart(selector, data, selectionDispatcher) {
     const extent = d3.extent(data.map(d => +d.amount))
     const radius =d3.scaleSqrt().domain(extent).range([10,40]);
 
     let svg = d3.select(selector)
+        .append('svg')
         .attr('width', width)
         .attr('height',height);
     
@@ -78,6 +80,8 @@ function bubbleMap() {
       // .on("mousemove", mousemove)
       // .on("mouseleave", mouseleave)
 
+      allBubbles = circles;
+
       ///////////////////////////////////////////////////////////
       // Add the brushing functionality in the linechart
       const brush = d3.brush()
@@ -100,7 +104,7 @@ function bubbleMap() {
 
           // Calling the dispatch 'linkFromLineChart' function with the arguments of selected data 
           // after classing the selected points during the brushing.
-          // selectionDispatcher.call('linkFromLineChart', this, svg.selectAll('.selected').data())
+          selectionDispatcher.call('linkFromBubbleMap', this, svg.selectAll('.selected').data())
         }
       }
 
@@ -114,6 +118,12 @@ function bubbleMap() {
       }
     }
     ///////////////////////////////////////////////////////////
+
+    // Add the title of the vis
+    svg.append('text')
+      .attr('x',100)
+      .attr('y',300)
+      .text('Bubble Map Visualization')
     })
   
     // Add the legend
@@ -138,5 +148,10 @@ function bubbleMap() {
       .text(d => d)
     return chart; 
   }
+
+  chart.updateSelection = function (selectedData) {
+    allBubbles.classed('selected', d => selectedData.includes(d))
+  }
+
   return chart;
 }

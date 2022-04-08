@@ -4,8 +4,30 @@
 
   d3.csv('data/GeographicalTotalDonation.csv').then(data => {
 
+    // Initialize the shared dispatch object in D3 for several visualization.
+    const dispatcher = d3.dispatch('linkFromBubbleMap', 'linkFromBarPlot')
+
     let geoDonationBubbleMap = bubbleMap()
-      ('#bubbleMap', data)
+      ('#bubbleMap', data, dispatcher)
+    
+    let geoDonationBarPlot = barPlot()
+      ('#barPlot', data, dispatcher)
+    
+    // let geoDonationPieChart = pieChart()
+    //   ('#pieChart', data)
+    
+    // let geoDonationAnalysis = donationAnalysis()
+    //   ('#donationsAnalysis', data)
+
+    // Register a callback that is triggered when a linkFromLineChart event is received.
+    dispatcher.on('linkFromBubbleMap', function(selectedData) {
+      geoDonationBarPlot.updateSelection(selectedData);
+    });
+
+    // Register a callback that is triggered when a linkFromScatterplot event is received.
+    dispatcher.on('linkFromBarPlot', function(selectedData) {
+      geoDonationBubbleMap.updateSelection(selectedData);
+    });
   });
 
 })());
