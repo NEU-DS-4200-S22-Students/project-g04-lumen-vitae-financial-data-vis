@@ -33,25 +33,22 @@ function counter(arr) {
 // 3 ring dount chart 
 function multiDountChart(data) {
   // console.log(data)
-  // clean and get the data d3 want for each ring
-  const arrayColumn = (arr, n) => arr.map(x => x[n]);
-
-  DnCounter = counter(arrayColumn(data, "numberOfChildrenSponsored"))
-  // console.log(DnCounter)
-
-  SorCounter = counter(arrayColumn(data, "state"))
-  // console.log(SorCounter)
-
-  PtCounter = counter(arrayColumn(data, "paymentType"))
-  // console.log(PtCounter)
-
 
   // get clean data
-  cleanedData = [PtCounter[0], SorCounter[0], DnCounter[0]]
+  cleanedData = []
+  data.forEach(element => cleanedData.push(element[0]));
+  // console.log(cleanedData)
   // labels 
-  labels = [PtCounter[1], SorCounter[1], DnCounter[1]]
+  labels = []
+  data.forEach(element => labels.push(element[1]));
   // set up colors for each ring
   colors = [d3.scaleOrdinal(d3.schemeCategory10), d3.scaleOrdinal(d3.schemeDark2), d3.scaleOrdinal(d3.schemeTableau10)]
+  sum = 0
+  for (let e of cleanedData[0]) {
+    sum = sum + e["count"]
+  }
+  // console.log(sum)
+
 
   // set up svg width height and etc
   var width = 1000;
@@ -99,11 +96,25 @@ function multiDountChart(data) {
       .attr('fill', function (d, i) {
         return color1(i);
       })
-      .on("click", function (d, i, j) {
-        // console.log(i)
+      .on("click", function (d, i) {
 
-        svg.selectAll('.label').text(i["data"]["label"])
-        svg.selectAll('.value').text(i["data"]["count"])
+        // console.log(d3.select(this))
+        // svg.selectAll(".clicked").classed("clicked", false)
+
+        var thisPath = d3.select(this);
+        var clicked = thisPath.classed('clicked');
+        thisPath.classed('clicked', !clicked);
+
+        // console.log(svg.selectAll(".clicked")._groups[0].length)
+        if (svg.selectAll(".clicked")._groups[0].length > 1) {
+          svg.selectAll(".clicked").classed("clicked", false)
+          thisPath.classed('clicked', !clicked)
+        }
+
+        
+        svg.selectAll('.label').text("Label: " + i["data"]["label"])
+        svg.selectAll('.value').text("Count: " + i["data"]["count"])
+        svg.selectAll(".percent").text(i["data"]["count"] * 100 / sum + "%")
       });
 
 
@@ -119,11 +130,11 @@ function multiDountChart(data) {
       .selectAll("tspan")
       .data(d => {
         label = labels[i][d.index]
-        
+
         if (label.length > 5) {
-          label = label.substring(0,5) + "..."
+          label = label.substring(0, 5) + "..."
         }
-        console.log(label)
+        // console.log(label)
         return `${label}`.split(/\n/)
       })
       .join("tspan")
@@ -139,16 +150,28 @@ function multiDountChart(data) {
 
   svg1.append('text')
     .attr('class', 'center-txt type')
+    .attr("font-family", "sans-serif")
+    .attr("font-size", 25)
     .attr('y', radius1 * -0.4)
     .attr('text-anchor', 'middle')
     .style('font-weight', 'bold')
     .text("Details");
   svg1.append('text')
+    .attr("font-family", "sans-serif")
+    .attr("font-size", 25)
     .attr('class', 'center-txt label')
-    .attr('text-anchor', 'middle');
+    .attr('text-anchor', 'middle').text("Label");
   svg1.append('text')
+    .attr("font-family", "sans-serif")
+    .attr("font-size", 25)
     .attr('class', 'center-txt value')
-    .attr('y', radius1 * 0.4).attr('text-anchor', 'middle');
+    .attr('y', radius1 * 0.4).attr('text-anchor', 'middle').text("Count");
+  svg1.append('text')
+    .attr("font-family", "sans-serif")
+    .attr("font-size", 20)
+    .attr("fill", "gray")
+    .attr('class', 'center-txt percent')
+    .attr('y', radius1 * 0.55).attr('text-anchor', 'middle');
 
 }
 
@@ -159,4 +182,18 @@ d3.csv('data/CircularRingVis.csv', function (d) {
     state: d.SoR,
     paymentType: d.PT,
   };
+}).then(d => {
+  const arrayColumn = (arr, n) => arr.map(x => x[n]);
+
+  DnCounter = counter(arrayColumn(d, "numberOfChildrenSponsored"))
+  // console.log(DnCounter)
+
+  SorCounter = counter(arrayColumn(d, "state"))
+  // console.log(SorCounter)
+
+  PtCounter = counter(arrayColumn(d, "paymentType"))
+  // console.log(PtCounter)
+
+  return [DnCounter, SorCounter, PtCounter]
+
 }).then(multiDountChart);
