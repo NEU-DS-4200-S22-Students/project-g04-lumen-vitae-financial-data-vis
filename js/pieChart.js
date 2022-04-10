@@ -2,9 +2,11 @@ function pieChart() {
     // set the dimensions and margins of the graph
     const width = 800,
     height = 800,
-    margin = 40;
+    margin = 60,
+    legendWidth = 90,
+    lengendHeight = 20;
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-    const radius = Math.min(width, height) / 2 - margin
+    const radius = Math.min(width, height) / 2 - margin - legendWidth;
     let totalDonation = 0;
     let svg;
     let defaultDataSet;
@@ -16,8 +18,6 @@ function pieChart() {
         for(let i = 0; i < data.length; i++){
           totalDonation = totalDonation + (+data[i].amount);         
         }
-
-        console.log(totalDonation)
 
         // sort data
         data.sort(function(b, a) {
@@ -41,7 +41,6 @@ function pieChart() {
         newData.push({stateName: 'other', amount:other});
         }
         defaultDataSet = newData;
-        console.log(newData);
         
 
         // append the svg object
@@ -60,8 +59,12 @@ function pieChart() {
     function updatePieChart(svg, newData) {
         svg.selectAll('path').remove()
         svg.selectAll('text').remove()
-        const color = d3.scaleOrdinal()
-        .range(d3.schemeSet2);
+        svg.selectAll('circle').remove()
+        const colorCategory24 = ['#FC0101', '#808B96', '#0F6505','#FCB001',
+         '#D3FC01', '#84FC01','#01FC79', '#01FCAB', '#01FCEF', '#01C9FC', '#018CFC', '#0157FC',
+         '#0107FC', '#6501FC', '#B101FC', '#EA01FC', '#FC0195', '#D0ECE7', '#513D3D', '#4B3D51',
+         '#274D31', '#929464', '#856494', '#FC4901']
+        const color = d3.scaleOrdinal().range(colorCategory24);
         
         const pie = d3.pie()
         .value(function(d) {return d.amount})
@@ -83,18 +86,25 @@ function pieChart() {
             .style("stroke-width", "2px")
             .style("opacity", 0.7)
 
+        svg.selectAll('legend')
+          .data(data_ready)
+          .join('circle')
+            .attr('cx', radius+margin/2)
+            .attr('cy', (d,i)=> -radius + i * lengendHeight)
+            .attr('r', 8)
+            .attr('fill', d => color(d.data.stateName))
+
         svg
-        .selectAll('mySlices')
+        .selectAll('legend')
         .data(data_ready)
         .join('text')
         .text(function(d){ return d.data.stateName +':  '+ (Number.parseFloat(d.data.amount/totalDonation*100)).toFixed(2) + "%"})
-        .attr("transform", function(d) { return `translate(${arcGenerator.centroid(d)})`})
-        .style("text-anchor", "middle")
-        .style("font-size", 17)
+        .attr('x', radius + margin/2 + 15)
+        .attr('y', (d,i) => -radius + i * lengendHeight + 5)
+        .style("font-size", 10)
     }
     
     chart.updateSelection = function (selectedData) {
-        console.log(selectedData)
         let unselectedStateDonation = totalDonation
         let updatedData = [];
         if (selectedData.length == 0){
