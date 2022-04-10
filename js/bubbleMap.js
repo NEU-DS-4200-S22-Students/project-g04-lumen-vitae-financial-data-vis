@@ -24,7 +24,7 @@ function bubbleMap() {
 
     d3.json('data/gz_2010_us_040_00_500k.json').then( function(mapData){
       // Filter data
-      mapData.features = mapData.features.filter(d => {console.log(d.properties.NAME); return d.properties.NAME !=="Alaska" && d.properties.NAME !=="Hawaii"})
+      mapData.features = mapData.features.filter(d => {return d.properties.NAME !=="Alaska" && d.properties.NAME !=="Hawaii"})
       // Draw the map
       svg.append("g")
           .selectAll("path")
@@ -36,31 +36,6 @@ function bubbleMap() {
           )
           .style("stroke", "black")
           .style("opacity", .3)
-      
-      // const Tooltip = d3.select(selector)
-      //   .append("div")
-      //   .attr("class", "tooltip")
-      //   .style("opacity", 1)
-      //   .style("background-color", "white")
-      //   .style("border", "solid")
-      //   .style("border-width", "2px")
-      //   .style("border-radius", "5px")
-      //   .style("padding", "5px")
-
-      // // Three function that change the tooltip when user hover / move / leave a cell
-      // const mouseover = function(event, d) {
-      //   Tooltip.style("opacity", 1)
-      // }
-      // var mousemove = function(event, d) {
-      //   console.log(d)
-      //   Tooltip
-      //     .html(d.stateName + "<br>" + "long: " + d.lon + "<br>" + "lat: " + d.lat)
-      //     .style("left", (event.x)/2 + "px")
-      //     .style("top", (event.y)/2 - 30 + "px")
-      // }
-      // var mouseleave = function(event, d) {
-      //   Tooltip.style("opacity", 0)
-      // }
       
       // Set the color group
       const colorGroup =  d3.scaleOrdinal(d3.schemeDark2)
@@ -76,13 +51,9 @@ function bubbleMap() {
         .attr("stroke", "#69Wb3a2")
         .attr("stroke-width", 3)
         .attr("fill-opacity", .5)
-      // .on("mouseover", mouseover)
-      // .on("mousemove", mousemove)
-      // .on("mouseleave", mouseleave)
 
       allBubbles = circles;
 
-      ///////////////////////////////////////////////////////////
       // Add the brushing functionality in the linechart
       const brush = d3.brush()
         .on("start brush", brushed)
@@ -117,7 +88,6 @@ function bubbleMap() {
         brushEnd = false
       }
     }
-    ///////////////////////////////////////////////////////////
 
     // Add the title of the vis
     svg.append('text')

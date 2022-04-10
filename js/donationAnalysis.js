@@ -37,7 +37,6 @@ function donationAnalysis() {
         newData.push({stateName: 'other', amount:other});
         }
         defaultDataSet = newData;
-        console.log(newData);
         
 
         // append the svg object
