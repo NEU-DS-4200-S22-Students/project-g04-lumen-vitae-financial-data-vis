@@ -59,11 +59,20 @@ function pieChart() {
     function updatePieChart(svg, newData) {
         svg.selectAll('path').remove()
         svg.selectAll('text').remove()
+
+        // Add the title of the pie chart
+        svg.append('text')
+            .attr('y',-330)
+            .style('stroke', 'black')
+            .text('Geographical Donation Pie Chart')
+            .style("text-anchor", "middle")
+            .style('font-size', '50px');
+
         svg.selectAll('circle').remove()
-        const colorCategory24 = ['#FC0101', '#808B96', '#0F6505','#FCB001',
-         '#D3FC01', '#84FC01','#01FC79', '#01FCAB', '#01FCEF', '#01C9FC', '#018CFC', '#0157FC',
-         '#0107FC', '#6501FC', '#B101FC', '#EA01FC', '#FC0195', '#D0ECE7', '#513D3D', '#4B3D51',
-         '#274D31', '#929464', '#856494', '#FC4901']
+        const colorCategory24 = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc",
+            "#e5d8bd","#fddaec","#f2f2f2", "#b3e2cd","#fdcdac","#cbd5e8","#f4cae4","#e6f5c9",
+            "#fff2ae","#f1e2cc","#cccccc", "#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3",
+            "#fdb462","#b3de69"]
         const color = d3.scaleOrdinal().range(colorCategory24);
         
         const pie = d3.pie()

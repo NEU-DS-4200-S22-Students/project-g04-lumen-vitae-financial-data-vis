@@ -14,6 +14,14 @@ function barPlot() {
       .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+    // Add the title of the pie chart
+    svg.append('text')
+      .attr('x', 150)
+      .attr('y', 100)
+      .style('stroke', 'black')
+      .text('Geographical Donation Bar Chart')
+      .style('font-size', '50px');
+
     // sort data
     data.sort(function(b, a) {
         return a.amount - b.amount;
