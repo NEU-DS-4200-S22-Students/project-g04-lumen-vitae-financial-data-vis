@@ -79,22 +79,25 @@ function bubbleMap() {
         }
       }
 
-    // Pretty tricky functinon.
-    // Change the brushEnd field to avoid endless loop.
-    function endBrushed() {
-      if(!brushEnd){
-        brushEnd = true
-        d3.select(this).call(brush.clear)
-        brushEnd = false
+      // Pretty tricky functinon.
+      // Change the brushEnd field to avoid endless loop.
+      function endBrushed() {
+        if(!brushEnd){
+          brushEnd = true
+          d3.select(this).call(brush.clear)
+          brushEnd = false
+        }
       }
-    }
-
+    })
+    
     // Add the title of the vis
     svg.append('text')
-      .attr('x',100)
-      .attr('y',300)
-      .text('Bubble Map Visualization')
-    })
+      .attr('x', 150)
+      .attr('y', 130)
+      .style('stroke', 'black')
+      .text('Donation Source Bubble Map')
+      .style('font-size', '50px')
+      .attr('fill', 'black');
   
     // Add the legend
     const legend = svg.append('g')
