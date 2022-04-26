@@ -34,13 +34,16 @@ function counter(arr) {
 function multiDountChart(data) {
   // console.log(data)
 
+  // titles of each ring
+  titles = data[0]
+
   // get clean data
   cleanedData = []
-  data.forEach(element => cleanedData.push(element[0]));
+  data[1].forEach(element => cleanedData.push(element[0]));
   // console.log(cleanedData)
   // labels 
   labels = []
-  data.forEach(element => labels.push(element[1]));
+  data[1].forEach(element => labels.push(element[1]));
   // set up colors for each ring
   colors = [d3.scaleOrdinal(d3.schemeCategory10), d3.scaleOrdinal(d3.schemeDark2), d3.scaleOrdinal(d3.schemeTableau10)]
   sum = 0
@@ -53,12 +56,14 @@ function multiDountChart(data) {
   // set up svg width height and etc
   var width = 1000;
   var height = 1000;
-  var donutWidth = 75;
-  var radius1 = Math.min(width, height) / 2;
+  var donutWidth = 50;
+  var radius1 = Math.min(width - 200, height - 200) / 2;
   var svg = d3.select('#circularRing')
     // .append('svg')
     .attr('width', width)
     .attr('height', height);
+
+
 
   // start a pie function to get the data
   var pie = d3.pie()
@@ -70,6 +75,7 @@ function multiDountChart(data) {
 
     // get color 
     var color1 = colors[i]
+
 
     // genereate image
     var svg1 = svg.append('g')
@@ -83,7 +89,7 @@ function multiDountChart(data) {
 
     labelRadius = (radius1 + radius1 - donutWidth) / 2
 
-    radius1 = radius1 - donutWidth - 20
+    radius1 = radius1 - donutWidth - 40
 
     const arcLabel = d3.arc().innerRadius(labelRadius).outerRadius(labelRadius);
 
@@ -111,7 +117,7 @@ function multiDountChart(data) {
           thisPath.classed('clicked', !clicked)
         }
 
-        
+
         svg.selectAll('.label').text("Label: " + i["data"]["label"])
         svg.selectAll('.value').text("Count: " + i["data"]["count"])
         svg.selectAll(".percent").text(i["data"]["count"] * 100 / sum + "%")
@@ -121,7 +127,7 @@ function multiDountChart(data) {
     // genereate label
     svg1.append("g")
       .attr("font-family", "sans-serif")
-      .attr("font-size", 20)
+      .attr("font-size", 15)
       .attr("text-anchor", "middle")
       .selectAll("text")
       .data(pie(cleanedData[i]))
@@ -142,36 +148,56 @@ function multiDountChart(data) {
       .attr("y", (_, i) => `${i * 1.1}em`)
       .attr("font-weight", (_, i) => i ? null : "bold")
       .text(d => d);
+
+    svg.append("path")
+      .attr("id", "title" + i.toString())
+      .attr("d", "M " + (100 + 90*(i)).toString() + ",490" + " A " + (400 - 90*i).toString()  +"," + (400 - 90*i).toString()  +" 0 0,1 " + (900 - 90*i).toString()  +",490") //SVG path
+      .style("fill", "none");
+
+    //Create an SVG text element and append a textPath element
+    svg.append("text")
+      .append("textPath") 
+      .attr("xlink:href", "#title" + i.toString())
+      .style("text-anchor", "middle") 
+      .attr("startOffset", "50%")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 20)
+      .attr('text-anchor', 'middle')
+      .style('font-weight', 'bold')
+      .text(titles[i]);
   }
 
   svg1.append("svg:circle")
-    .attr("r", radius1 * 0.8)
+    .attr("r", radius1 * 1)
     .style("fill", "#E7E7E7")
 
   svg1.append('text')
     .attr('class', 'center-txt type')
     .attr("font-family", "sans-serif")
-    .attr("font-size", 25)
+    .attr("font-size", 20)
     .attr('y', radius1 * -0.4)
     .attr('text-anchor', 'middle')
     .style('font-weight', 'bold')
     .text("Details");
   svg1.append('text')
     .attr("font-family", "sans-serif")
-    .attr("font-size", 25)
+    .attr("font-size", 20)
     .attr('class', 'center-txt label')
     .attr('text-anchor', 'middle').text("Label");
   svg1.append('text')
     .attr("font-family", "sans-serif")
-    .attr("font-size", 25)
+    .attr("font-size", 20)
     .attr('class', 'center-txt value')
     .attr('y', radius1 * 0.4).attr('text-anchor', 'middle').text("Count");
   svg1.append('text')
     .attr("font-family", "sans-serif")
-    .attr("font-size", 20)
+    .attr("font-size", 17)
     .attr("fill", "gray")
     .attr('class', 'center-txt percent')
     .attr('y', radius1 * 0.55).attr('text-anchor', 'middle');
+
+
+
 
 }
 
@@ -194,6 +220,6 @@ d3.csv('data/CircularRingVis.csv', function (d) {
   PtCounter = counter(arrayColumn(d, "paymentType"))
   // console.log(PtCounter)
 
-  return [DnCounter, SorCounter, PtCounter]
+  return [["Number Of Children Choose to Sponsore", "States Donor Come From", "Payment Type Donor Choose"], [DnCounter, SorCounter, PtCounter]]
 
 }).then(multiDountChart);
