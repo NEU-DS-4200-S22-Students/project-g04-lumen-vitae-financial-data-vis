@@ -10,7 +10,7 @@ function bubbleMap() {
     
   function chart(selector, data, selectionDispatcher) {
     const extent = d3.extent(data.map(d => +d.amount))
-    const radius =d3.scaleSqrt().domain(extent).range([10,40]);
+    const radius =d3.scaleSqrt().domain(extent).range([10,60]);
 
     let svg = d3.select(selector)
         .append('svg')
@@ -106,7 +106,7 @@ function bubbleMap() {
       .attr("text-anchor", "middle")
       .style("font", "10px sans-serif")
       .selectAll(".legend")
-      .data([1000, 10000, 100000])
+      .data([1000, 30000, 100000])
       .join("g")
   
     legend.append("circle")
@@ -119,6 +119,23 @@ function bubbleMap() {
       .attr("y", d => -2 * radius(d))
       .attr("dy", "1.3em")
       .text(d => d)
+    
+    svg.append("text")
+      .attr('x', 820)
+      .attr('y', 720)
+      .style('stroke', 'black')
+      .text('Size: Donation Amount')
+      .style('font-size', '13px')
+      .attr('fill', 'black');
+
+    svg.append("text")
+      .attr('x', 820)
+      .attr('y', 740)
+      .style('stroke', 'black')
+      .text('Number: Threshold Amount')
+      .style('font-size', '13px')
+      .attr('fill', 'black');
+    
     return chart; 
   }
 

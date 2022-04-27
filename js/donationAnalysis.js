@@ -65,17 +65,26 @@ function donationAnalysis() {
         svg.append('text')
             .attr('y',-270)
             .style('stroke', 'black')
-            .text('Total Donation Amounts: ' + totalDonation)
+            .text('Total Donation Amounts: ' + totalDonation.toFixed())
             .style("text-anchor", "middle")
             .style('font-size', '30px');
         
         for(let i = 0; i < newData.length; i++){
-          svg.append('text')
-            .attr('y', -240 + 25 * (i+1))
-            .style('stroke', 'blue')
-            .text(newData[i].stateName + ":  " + newData[i].amount)
-            .style("text-anchor", "middle")
-            .style('font-size', '25px');     
+          if (i != newData.length - 1) {
+            svg.append('text')
+                .attr('y', -240 + 25 * (i+1))
+                .style('stroke', 'blue')
+                .text(newData[i].stateName + ":  " + newData[i].amount.toFixed())
+                .style("text-anchor", "middle")
+                .style('font-size', '25px');    
+          } else {
+            svg.append('text')
+                .attr('y', -240 + 25 * (i+1))
+                .style('stroke', 'red')
+                .text(newData[i].stateName + ":  " + newData[i].amount.toFixed())
+                .style("text-anchor", "middle")
+                .style('font-size', '25px');
+          }
         }
     }
     
