@@ -37,7 +37,8 @@ function barPlot() {
       .call(d3.axisBottom(x))
       .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+        .style("text-anchor", "end")
+        .style('font-size', '13px')
 
     // Add Y axis
     const y = d3.scaleLinear()

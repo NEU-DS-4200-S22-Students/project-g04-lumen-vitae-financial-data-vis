@@ -98,7 +98,7 @@ function pieChart() {
         svg.selectAll('legend')
           .data(data_ready)
           .join('circle')
-            .attr('cx', radius+margin/2)
+            .attr('cx', radius+margin/2 - 15)
             .attr('cy', (d,i)=> -radius + i * lengendHeight)
             .attr('r', 8)
             .attr('fill', d => color(d.data.stateName))
@@ -107,10 +107,10 @@ function pieChart() {
         .selectAll('legend')
         .data(data_ready)
         .join('text')
-        .text(function(d){ return d.data.stateName +':  '+ (Number.parseFloat(d.data.amount/totalDonation*100)).toFixed(2) + "%"})
-        .attr('x', radius + margin/2 + 15)
+        .text(function(d){ return d.data.stateName +':'+ (Number.parseFloat(d.data.amount/totalDonation*100)).toFixed(2) + "%"})
+        .attr('x', radius + margin/2)
         .attr('y', (d,i) => -radius + i * lengendHeight + 5)
-        .style("font-size", 10)
+        .style("font-size", 12)
     }
     
     chart.updateSelection = function (selectedData) {
