@@ -220,6 +220,6 @@ d3.csv('data/CircularRingVis.csv', function (d) {
   PtCounter = counter(arrayColumn(d, "paymentType"))
   // console.log(PtCounter)
 
-  return [["Number Of Children Chosen to Sponsor", "States Donor Come From", "Payment Type Donor Choose"], [DnCounter, SorCounter, PtCounter]]
+  return [["Number Of Children Chosen to Sponsor", "Number of Donors Per State", "Number of Donations per Payment Type"], [DnCounter, SorCounter, PtCounter]]
 
 }).then(multiDountChart);
