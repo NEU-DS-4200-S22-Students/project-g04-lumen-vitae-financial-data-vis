@@ -1,5 +1,9 @@
 # Put any data files in this folder
 
+gz_2010_us_040_00_500k.json is the file used to create the US map in the bubble visualizatoin.
+Other .csv files are the regular data files.
+All data cleanning file are put in the dataCleaning File forder.
+
 Ideally your data is a CSV file.
 
 *Do not commit personally identifying or confidential data!*
