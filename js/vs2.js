@@ -30,7 +30,7 @@ function counter(arr) {
   return [result, Object.keys(count)]
 }
 
-// 3 ring dount chart 
+// 3 ring dount chart
 function multiDountChart(data) {
   // console.log(data)
 
@@ -41,7 +41,7 @@ function multiDountChart(data) {
   cleanedData = []
   data[1].forEach(element => cleanedData.push(element[0]));
   // console.log(cleanedData)
-  // labels 
+  // labels
   labels = []
   data[1].forEach(element => labels.push(element[1]));
   // set up colors for each ring
@@ -73,7 +73,7 @@ function multiDountChart(data) {
   // recursion will generate 3 ring
   for (let i = 0; i < 3; i++) {
 
-    // get color 
+    // get color
     var color1 = colors[i]
 
 
@@ -156,9 +156,9 @@ function multiDountChart(data) {
 
     //Create an SVG text element and append a textPath element
     svg.append("text")
-      .append("textPath") 
+      .append("textPath")
       .attr("xlink:href", "#title" + i.toString())
-      .style("text-anchor", "middle") 
+      .style("text-anchor", "middle")
       .attr("startOffset", "50%")
       .attr("font-family", "sans-serif")
       .attr("font-size", 20)
@@ -220,6 +220,6 @@ d3.csv('data/CircularRingVis.csv', function (d) {
   PtCounter = counter(arrayColumn(d, "paymentType"))
   // console.log(PtCounter)
 
-  return [["Number Of Children Choose to Sponsore", "States Donor Come From", "Payment Type Donor Choose"], [DnCounter, SorCounter, PtCounter]]
+  return [["Number Of Children Chosen to Sponsor", "States Donor Come From", "Payment Type Donor Choose"], [DnCounter, SorCounter, PtCounter]]
 
 }).then(multiDountChart);
