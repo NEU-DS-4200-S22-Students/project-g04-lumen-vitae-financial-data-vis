@@ -10,8 +10,8 @@
     let geoDonationBubbleMap = bubbleMap()
       ('#bubbleMap', data, dispatcher)
     
-    let geoDonationBarPlot = barPlot()
-      ('#barPlot', data, dispatcher)
+    // let geoDonationBarPlot = barPlot()
+    //   ('#barPlot', data, dispatcher)
     
     let geoDonationPieChart = pieChart()
       ('#pieChart', data, dispatcher)
@@ -21,7 +21,7 @@
 
     // Register a callback that is triggered when a linkFromLineChart event is received.
     dispatcher.on('linkFromBubbleMap', function(selectedData) {
-      geoDonationBarPlot.updateSelection(selectedData);
+      // geoDonationBarPlot.updateSelection(selectedData);
       geoDonationPieChart.updateSelection(selectedData);
       geoDonationAnalysis.updateSelection(selectedData);
     });
